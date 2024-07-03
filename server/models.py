@@ -14,13 +14,8 @@ class Author(db.Model):
     # Add validators 
     @validates('name')
     def validate_name(self, key, name):
-        if not name:
-            raise ValueError('Author name is required')
-        
-        authors = Author.query.all()
-    
-        if name in [author.name for author in authors]:
-            raise ValueError('Author name must be unique')
+        if (not name) or (name in [author.name for author in Author.query.all()]):
+            raise ValueError('Author name is required and must be unique')
 
         return name
 
@@ -75,7 +70,7 @@ class Post(db.Model):
         clickbait_words = ['Won\'t Believe', 'Secret', 'Top', 'Guess']
         ls = [word for word in clickbait_words if word in title]
         if not ls:
-            raise ValueError('Title must contain one of the following: Won\'t Believe, Secret, Top, Guess')
+            raise ValueError('Title must contain one of the following words: Won\'t Believe, Secret, Top, Guess')
         return title
         
 
